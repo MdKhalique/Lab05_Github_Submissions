@@ -1,0 +1,107 @@
+import random
+import simpleaudio as sa
+
+class TechPiratesGame:
+    def __init__(self):
+        # Initialize the Tech Pirates game with an empty catalog of tech treasures and an initial credit balance.
+        self.tech_treasures = {}
+        self.credit_balance = 1000  # Initial Balance
+        self.success_sound = sa.WaveObject.from_wave_file('Lab05\success_sound.wav')
+
+    def acquire_tech_treasures(self, tech_items):
+        """
+        Acquire tech treasures and add them to the catalog.
+
+        Parameters:
+        - tech_items (dict): A dictionary containing tech items and their corresponding values.
+
+        Returns:
+        None
+        """
+        for item, value in tech_items.items():
+            self.tech_treasures[item] = value
+
+    def display_tech_treasures(self):
+        """
+        Display the catalog of available tech treasures.
+
+        Parameters:
+        None
+
+        Returns:
+        None
+        """
+        print("Tech Treasures Catalog:")
+        for item, value in self.tech_treasures.items():
+            print(f"- {item}: Value {value} Credits")
+
+    def spend_credits(self, amount):
+        """
+        Spend credits to purchase tech treasures.
+
+        Parameters:
+        - amount (int): The amount of credits to spend.
+
+        Returns:
+        - bool: True if the spending is successful, False otherwise.
+        """
+        if amount <= self.credit_balance:
+            self.credit_balance -= amount
+            return True
+        else:
+            print("Insufficient credits! Please spend wisely.")
+            return False
+    
+    def play_game(self):
+        """
+        Main function to play the Tech Pirates game.
+
+        Parameters:
+        None
+
+        Returns:
+        None
+        """
+        while self.credit_balance > 0:
+            print("\nCredit Balance:", self.credit_balance)
+            spending = int(input("Spend your credits: "))
+
+            if not self.spend_credits(spending):
+                continue
+
+            result = random.choice([1, 0]) 
+            if result:
+                print("\n" + "=" * 40)
+                print("Congratulations, Tech Pirate! You found valuable tech treasures!")
+                chosen_tech = random.choice(list(self.tech_treasures.keys()))
+                value = self.tech_treasures[chosen_tech]
+                self.credit_balance += value - spending
+                print(f"You acquired:")
+                print(f"  Tech: {chosen_tech}")
+                print(f"  Value: {value - spending} Credits")
+                print("=" * 40)
+
+                # Sonification - play a success sound
+                self.success_sound.play()
+            else:
+                print("Oops! Your attempt to hack into the system failed.")
+                self.display_tech_treasures()
+
+        print("\nGame Over! Your credit balance is 0 or below. Tech Pirates, retreat to the shadows!")
+
+if __name__ == "__main__":
+    tech_pirates_game = TechPiratesGame()
+
+    # Tech items catalog
+    tech_items = {
+        "Quantum Encryption Algorithm": 200,
+        "Neural Interface Upgrade": 300,
+        "Stealth Cloaking Device": 250,
+        "AI Core Blueprint": 180,
+        "Teleportation Module": 220,
+        "Interstellar Data Cache": 400
+    }
+    tech_pirates_game.acquire_tech_treasures(tech_items)
+
+    # Play the Tech Pirates game
+    tech_pirates_game.play_game()

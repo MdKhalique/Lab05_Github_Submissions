@@ -1,0 +1,73 @@
+import random
+import string
+
+class PasswordSimulator:
+    def __init__(self):
+        self.accepted_passwords = []
+        self.rejected_passwords = []
+        self.dictionary_words = [
+            "123456", "password", "123456789", "12345678", "12345", "111111", "1234567", "sunshine", "qwerty",
+            "iloveyou", "princess", "admin", "welcome", "666666", "abc123", "football", "123123", "monkey", "654321",
+            "!@#$%^&*", "charlie", "aa123456", "donald", "password1", "qwerty123", "letmein", "zxcvbnm", "login",
+            "starwars", "121212", "bailey", "freedom", "shadow", "passw0rd", "master", "baseball", "buster", "Daniel",
+            "Hannah", "Thomas", "summer", "George", "Harley", "222222", "Jessica", "ginger", "abcdef", "Jordan", "55555",
+            "Tigger", "Joshua", "Pepper", "Robert", "Matthew", "12341234", "Andrew", "lakers", "andrea", "1qaz2wsx",
+            "sophie", "Ferrari", "Cheese", "Computer", "jesus", "Corvette", "Mercedes", "flower", "Blahblah", "Maverick",
+            "Hello", "loveme", "nicole", "hunter", "amanda", "jennifer", "banana", "chelsea", "ranger", "trustno1",
+            "merlin", "cookie", "ashley", "bandit", "killer", "aaaaaa", "1q2w3e", "zaq1zaq1", "mustang", "test",
+            "hockey", "dallas", "whatever", "admin123", "michael", "liverpool", "querty", "william", "soccer",
+            "london", "!@#$%^&*", "trustnot", "dragon", "adobe123", "1234", "1234567890"
+        ]
+
+    def generate_random_password(self, length=8):
+        # Define the possible characters for the password
+        allowed_characters = string.ascii_letters + string.digits + string.punctuation
+        #store the password
+        password = ""
+        # Generate the password by adding random characters to it
+        for _ in range(length):
+            password += random.choice(allowed_characters)
+
+        return password
+
+    def is_acceptable_password(self, password):
+        # Check if the password contains at least one digit
+        has_digit = any(char.isdigit() for char in password)
+        # Check if the password contains at least one alphabetic character
+        has_alpha = any(char.isalpha() for char in password)
+        # Check if the password contains at least one special symbol
+        has_special_symbol = any(char in string.punctuation for char in password)
+        # Check if the lowercase version of the password is not in the dictionary words
+        not_in_dictionary = password.lower() not in self.dictionary_words
+
+        # Return True if all conditions are met, otherwise return False
+        return has_digit and has_alpha and has_special_symbol and not_in_dictionary
+
+    def simulate_password_creation(self, iterations=40):
+        # Simulate password creation for the specified number of iterations
+        for _ in range(iterations):
+            # Generate a random password
+            generated_password = self.generate_random_password()
+
+            # Check if the generated password is acceptable
+            if self.is_acceptable_password(generated_password):
+                self.accepted_passwords.append(generated_password)
+            else:
+                self.rejected_passwords.append(generated_password)
+
+        # Display the archived accepted passwords
+        print("\nAccepted Passwords:")
+        for password in self.accepted_passwords:
+            print("-", password)
+
+        # Display the archived rejected passwords
+        print("\nRejected Passwords:")
+        for password in self.rejected_passwords:
+            print("-", password)
+
+
+if __name__ == "__main__":
+   
+    simulator = PasswordSimulator()
+    
+    simulator.simulate_password_creation()

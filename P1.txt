@@ -1,0 +1,92 @@
+import random
+from datetime import datetime
+
+class DataCollector:
+    def generate_random_data(self):
+        #NICEEEEEE, imagine getting the best numbers
+        username = "username" + str(random.randint(1000, 420421))
+        password = "password" + str(random.randint(10000, 696970))
+        #Birthday formated
+        birthdate = self.generate_random_birthdate()
+        address = "address" + str(random.randint(1, 304))
+        #9 digits in SSN
+        social_security_number = str(random.randint(100000000, 999999999))
+        #Dictionary about product
+        product_purchased = self.generate_random_product_purchase()
+        #'-' a salesperson I guess
+        salesperson = "salesperson" + str(random.randint(1, 10))
+
+        #Return Dict, easier for part 2
+        return {
+            "username": username,
+            "password": password,
+            "birthdate": birthdate,
+            "address": address,
+            "social_security_number": social_security_number,
+            "product_purchased": product_purchased,
+            "salesperson": salesperson
+        }
+
+    def generate_random_birthdate(self):
+        start_date = datetime(1950, 1, 1)
+        end_date = datetime(2024, 12, 31)
+        random_date = start_date + (end_date - start_date) * random.random()
+        return random_date.strftime("%Y-%m-%d")
+
+    def generate_random_product_purchase(self):
+        product_id = "ID-" + str(random.randint(100, 999))
+        quantity = random.randint(1, 214)
+        date_of_order = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        region = "Region" + str(random.randint(1, 5))
+
+        return {
+            "product_id": product_id,
+            "quantity": quantity,
+            "date_of_order": date_of_order,
+            "region": region
+        }
+
+class KeyValueStore:
+    #Generic dict initialization, storage and searching
+    def __init__(self):
+        self.data_store = {}
+
+    def add_data(self, key, value):
+        self.data_store[key] = value
+
+    def search_data(self, key, search_value):
+      results = []
+      for k, value in self.data_store.items():
+          if key in value and value[key] == search_value:
+              results.append(value)
+      return results
+
+if __name__ == "__main__":
+    data_collector = DataCollector()
+    key_value_store = KeyValueStore()
+
+    # Generate and collect sample data
+    for trial in range(10):
+        user_data = data_collector.generate_random_data()
+        user_id = "ID-" + str(random.randint(42069, 69690))
+        key_value_store.add_data(user_id, user_data)
+
+    # Get user input for search
+    search_key = input("Enter the attribute to search (e.g., 'address', 'salesperson'): ")
+    search_value = input("Enter the value to search for: ")
+
+    # Search for users based on user input
+    search_results = key_value_store.search_data(search_key, search_value)
+
+    # Display search results (Formatted to ease viewing)
+    if search_results:
+        print("\nSearch Results:")
+        for idx, result in enumerate(search_results, 1):
+            print(f"\nResult {idx}:")
+            for key, value in result.items():
+                print(f"{key}: {value}")
+    else:
+        print("\nNo results found for the given search criteria.")
+        print("Make sure to input with lowercased letters.\n")
+
+    
